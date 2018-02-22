@@ -61,13 +61,10 @@
     <div class="Gap2"></div>
 
     @if(Auth::check() == true)
-    <div class="profileListDiv">
-      <a href="" class="profileUpdateButton">Update</a>
-    </div>
-    @else
-     <div class="profileListDiv">
-      <a title="Login Required" class="profileUpdateButton" id="profileUpdateButton">Update</a>
-    </div>
+      <div class="profileListDiv">
+        <a title="Login Required" class="profileUpdateButton" id="profileUpdateButton">Update</a>
+      </div>
+
     @endif
 
     <a href="#portfolio"><div class="favCourseButton">Favourite Courses</div></a>

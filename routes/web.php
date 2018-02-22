@@ -59,11 +59,6 @@ Route::get('/allcourses', function () {
 
 Route::get('/updatecourse/{id}', 'CourseController@showUpdateForm');
 
-Route::get('/showcourse', function () {
-    return view('ShowCourse');
-});
-
-
 
 Auth::routes();
 

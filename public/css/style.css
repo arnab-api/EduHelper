@@ -191,6 +191,9 @@ input::-webkit-input-placeholder {
 .Gap10{
   margin-top: 50px;
 }
+.Gap20{
+  margin-top: 150px;
+}
 
 
 .circle-tile {
@@ -520,7 +523,7 @@ input::-webkit-input-placeholder {
 
 
 form .stars {
-  background: url(../images/stars.png) repeat-x 0 0;
+  background: url(../img/stars.png) repeat-x 0 0;
   width: 150px;
   margin: 0 auto;
 }
@@ -1068,103 +1071,85 @@ textarea.songUploadDiv {
   font-weight: 600;
 }
 
-.leftside{
-  float: left;
-  height: 100px;
-  width: 30%;
-  background-color: red;
-}
-.rightside{
-  width: 70%;
-  height: 100px;
-  background-color: green;
-  float: right;
-}
 
-.addToFavIcon {
-  margin-top: 20px;
-  margin-right: 30px;
-  float: right;
-  height: 30px;
-  width: 30px;
-}
 
-.addToFavIcon img {
-  height: 30px;
-  width: 30px;
-}
-
-click {
+.fav_click {
   font-size: 33px;
   color: rgba(0,0,0,.5);
   width: 38px;
   height: 38px;
+  margin: 0 auto;
+  margin-top: 20px;
   position: relative;
   cursor: pointer;
 }
 
-.click span {
+.fav_click fav_span {
   margin-left: 4px;
   margin-top: 3px;
   z-index: 999;
   position: absolute;
 }
 
-.click span:hover {
+fav_span:hover {
   opacity: 0.8;
 }
 
-.click span:active {
+fav_span:active {
   transform: scale(0.93,0.93) translateY(2px)
 }
 
-.ring, .ring2 {
-  margin-top: -12.5px;
-  margin-left: -10px;
-  opacity: 1;
-  background: gray;
-  width: 60px;
-  height: 60px;
+.fav_ring, .fav_ring2 {
+  opacity: 0;
+  background: grey;
+  width: 1px;
+  height: 1px;
   position: absolute;
+  top: 19px;
+  left: 18px;
   border-radius: 50%;
   cursor: pointer;
 }
 
-.active span, .active-2 span {
+.fa_active fav_span, .fav_active-2 fav_span {
   color: #F5CC27 !important;
 }
 
-.active-2 .ring {
+.fav_active-2 .fav_ring {
   width: 58px !important;
-  height: 58px !important; 
+  height: 58px !important;
+  top: -10px !important;
+  left: -10px !important;
   position: absolute;
   border-radius: 50%;
   opacity: 1 !important;
 }
 
-.active-2 .ring {
+.fav_active-2 .fav_ring {
   background: #F5CC27 !important;
 }
 
-.active-2 .ring2 {
+.fav_active-2 .fav_ring2 {
   background: #fff !important;
 }
 
-.active-3 .ring2 {
+.fav_active-3 .fav_ring2 {
   width: 60px !important;
   height: 60px !important;
+  top: -11px !important;
+  left: -11px !important;
   position: absolute;
   border-radius: 50%;
-  opacity: 0.8 !important;
+  opacity: 1 !important;
 }
 
-.info {
+.fav_info {
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   white-space: nowrap;
-  color: gray;
+  color: grey;
   position: relative;
   top: 30px;
   left: -46px;
@@ -1172,13 +1157,391 @@ click {
   transition: all 0.3s ease;
 }
 
-.info-tog {
+.fav_info-tog {
   color: #F5CC27;
   position: relative;
   top: 45px;
   opacity: 1;
 }
 
-* {
+.addToFavDiv{
+  float: right; 
+  margin-top: -20px;
+}
+
+.addToFavDiv *{
   transition: all .32s ease;
+}
+
+.rateDiv{
+  margin-top: 5px;
+  float: right;
+  margin-left: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+form .stars {
+  background: url(../img/stars.png) repeat-x 0 0;
+  width: 150px;
+  margin: 0 auto;
+}
+
+form .stars input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+form .stars input[type="radio"].star-5:checked ~ span {
+  width: 100%;
+}
+form .stars input[type="radio"].star-4:checked ~ span {
+  width: 80%;
+}
+form .stars input[type="radio"].star-3:checked ~ span {
+  width: 60%;
+}
+form .stars input[type="radio"].star-2:checked ~ span {
+  width: 40%;
+}
+form .stars input[type="radio"].star-1:checked ~ span {
+  width: 20%;
+}
+form .stars label {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 0!important;
+  padding: 0!important;
+  text-indent: -999em;
+  float: left;
+  position: relative;
+  z-index: 10;
+  background: transparent!important;
+  cursor: pointer;
+}
+form .stars label:hover ~ span {
+  background-position: 0 -30px;
+}
+
+form .stars label.star-5:hover ~ span {
+  width: 100% !important;
+}
+form .stars label.star-4:hover ~ span {
+  width: 80% !important;
+}
+form .stars label.star-3:hover ~ span {
+  width: 60% !important;
+}
+form .stars label.star-2:hover ~ span {
+  width: 40% !important;
+}
+form .stars label.star-1:hover ~ span {
+  width: 20% !important;
+}
+form .stars span {
+  display: block;
+  width: 0;
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 30px;
+  background: url(../img/stars.png) repeat-x 0 -60px;
+  -webkit-transition: -webkit-width 0.5s;
+  -moz-transition: -moz-width 0.5s;
+  -ms-transition: -ms-width 0.5s;
+  -o-transition: -o-width 0.5s;
+  transition: width 0.5s;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Oscuro: #283035
+ * Azul: #03658c
+ * Detalle: #c7cacb
+ * Fondo: #dee1e3
+ ----------------------------------*/
+
+.commentSection{
+
+}
+
+.commentSection * {
+     margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+ }
+
+ .commentSection a {
+  color: #03658c;
+  text-decoration: none;
+ }
+
+.commentSection ul {
+  list-style-type: none;
+}
+
+.comments-container {
+  margin: 60px auto 15px;
+  width: 90%;
+}
+
+.comments-container h1 {
+  font-size: 36px;
+  color: #283035;
+  font-weight: 400;
+}
+
+.comments-container h1 a {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.comments-list {
+  margin-top: 30px;
+  position: relative;
+}
+
+.comments-list:before {
+  content: '';
+  width: 2px;
+  height: 100%;
+  background: #c7cacb;
+  position: absolute;
+  left: 32px;
+  top: 0;
+}
+
+.comments-list:after {
+  content: '';
+  position: absolute;
+  background: #c7cacb;
+  bottom: 0;
+  left: 27px;
+  width: 7px;
+  height: 7px;
+  border: 3px solid #dee1e3;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.reply-list:before, .reply-list:after {display: none;}
+.reply-list li:before {
+  content: '';
+  width: 60px;
+  height: 2px;
+  background: #c7cacb;
+  position: absolute;
+  top: 25px;
+  left: -55px;
+}
+
+
+.comments-list li {
+  margin-bottom: 15px;
+  display: block;
+  position: relative;
+}
+
+.comments-list li:after {
+  content: '';
+  display: block;
+  clear: both;
+  height: 0;
+  width: 0;
+}
+
+.reply-list {
+  padding-left: 88px;
+  clear: both;
+  margin-top: 15px;
+}
+
+.comments-list .comment-avatar {
+  width: 65px;
+  height: 65px;
+  position: relative;
+  z-index: 99;
+  float: left;
+  border: 3px solid #FFF;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.comments-list .comment-avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+.reply-list .comment-avatar {
+  width: 50px;
+  height: 50px;
+}
+
+.comment-main-level:after {
+  content: '';
+  width: 0;
+  height: 0;
+  display: block;
+  clear: both;
+}
+
+
+.comments-list .comment-box {
+  width: 89%;
+  float: right;
+  position: relative;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+  -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+
+.comments-list .comment-box:before, .comments-list .comment-box:after {
+  content: '';
+  height: 0;
+  width: 0;
+  position: absolute;
+  display: block;
+  border-width: 10px 12px 10px 0;
+  border-style: solid;
+  border-color: transparent #f5f5f5;
+  top: 8px;
+  left: -11px;
+}
+
+.comments-list .comment-box:before {
+  border-width: 11px 13px 11px 0;
+  border-color: transparent rgba(0,0,0,0.05);
+  left: -12px;
+}
+
+.reply-list .comment-box {
+  width: 90%;
+}
+.comment-box .comment-head {
+  background: #f5f5f5;
+  padding: 10px 12px;
+  border-bottom: 1px solid #E5E5E5;
+  overflow: hidden;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+}
+
+.comment-box .comment-head i {
+  float: right;
+  margin-left: 14px;
+  position: relative;
+  top: 2px;
+  color: #A6A6A6;
+  cursor: pointer;
+  -webkit-transition: color 0.3s ease;
+  -o-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
+.comment-box .comment-head i:hover {
+  color: #03658c;
+}
+
+.comment-box .comment-name {
+  color: #283035;
+  font-size: 14px;
+  font-weight: 700;
+  float: left;
+  margin-right: 10px;
+}
+
+.comment-box .comment-name a {
+  color: #283035;
+}
+
+.comment-box .comment-head span {
+  float: left;
+  color: #999;
+  font-size: 13px;
+  position: relative;
+  top: 1px;
+}
+
+.comment-box .comment-content {
+  background: #FFF;
+  padding: 12px;
+  font-size: 15px;
+  color: #595959;
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+}
+
+.comment-box .comment-name.by-author, .comment-box .comment-name.by-author a {color: #03658c;}
+.comment-box .comment-name.by-author:after {
+  content: 'Instructor';
+  background: #03658c;
+  color: #FFF;
+  font-size: 12px;
+  padding: 3px 5px;
+  font-weight: 700;
+  margin-left: 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+
+@media only screen and (max-width: 766px) {
+  .comments-container {
+    width: 480px;
+  }
+
+  .comments-list .comment-box {
+    width: 390px;
+  }
+
+  .reply-list .comment-box {
+    width: 320px;
+  }
 }

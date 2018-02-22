@@ -121,6 +121,33 @@ class CourseController extends Controller
     public function show($id)
     {
         //
+        $course = Course::find($id);
+        $tag_arr = [];
+        foreach($course->tag_arr as $tag_id){
+            $tag = Tag::find($tag_id);
+            if($tag !== null){
+                $tag_arr = array_prepend($tag_arr , $tag);
+            }
+        }
+        $tag_arr = array_reverse($tag_arr);
+        $lecture_arr = Lecture::where('target_course' , $id)->orderBy('serial')->get();
+        $uploader = User::find($course->uploaded_by);
+//        echo sizeof($lecture_arr);
+
+//        for ($i = 0 ; $i < sizeof($lecture_arr) ; $i++){
+//            $lecture = $lecture_arr[$i];
+//            echo " ====> "."<br>";
+//            echo $lecture->content."<br>";
+//        }
+        $fav = 0;
+        if(Auth::check()){
+            $currentUser = Auth::user();
+            if (($key = array_search($id, $currentUser->bookmarked_courses)) !== false) $fav = 1;
+        }
+
+//        echo $fav;
+
+        return view('ShowCourse' , compact('course' , 'tag_arr' , 'lecture_arr' , 'uploader' , 'id' , 'fav'));
     }
 
     /**

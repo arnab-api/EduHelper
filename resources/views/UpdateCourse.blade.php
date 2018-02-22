@@ -62,14 +62,47 @@
 
 
 <div class="container" id="lectDiv">
+  <div style="display: none;">{{$i=0}}</div>
 @foreach($lecture_arr as $lecture)
 <div class="lectNumber">
   <button type="button" class="btn btn-default btn_num-circle btn_num-lg">{{$lecture->serial}}</button>
 </div>
 <div class="lecturesDiv">
   <h1>{{$lecture->title}}</h1>
-   <img src="{{asset('img/edit_icon_2.png')}}" class="editIcon2" id="editButton2">
+  <img src="{{asset('img/edit_icon_2.png')}}" class="editIcon2" id="{{"editLectButton".$i}}" onclick="openEditLectureDiv({{$i}}, {{sizeof($lecture_arr)}});" >
 </div>
+    <div  id="{{"editLectDiv".$i}}" style="margin-top: -20px; margin-bottom: 20px; display: none;">
+      <div class="Gap10"></div>
+      <div class="ckeditor_Div">
+        {!! Form::open(
+       array(
+            'method'=>'PUT',
+            'route'=>['lecture.update' , $lecture->_id],
+            'class' => 'form',
+            'novalidate' => 'novalidate',
+            'files' => true))
+   !!}
+          <a id="{{"editLectCancel".$i}}" onclick="closeEditLectureDiv({{$i}});" style="cursor: pointer; float: right;"><i class="fa fa-times"></i></a>
+          <div class="form-group row">
+            <label for="example-text-input" class="col-2 col-form-label">Lecture No.</label>
+            <div class="col-10">
+              <input class="form-control" type="text" value="{{$lecture->serial}}" id="{{"lectNum".$i}}" name="{{"lectNum".$lecture->_id}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="example-text-input" class="col-2 col-form-label">Lecture Title</label>
+            <div class="col-10">
+              <input class="form-control" type="text" value="{{$lecture->title}}" id="{{"lectTitle".$i}}" name="{{"lectTitle".$lecture->_id}}">
+            </div>
+          </div>
+        <textarea name="{{"ck_editor".$lecture->_id}}" id="{{"ck_editor".$i}}" rows="10" cols="80">{{$lecture->content}}
+        </textarea>
+          <div class="Gap7"></div>
+          <button type="submit" style="margin-left: 46%;" class="btn btn-success" id="{{"addButton".$i}}">Done</button>
+        {!! Form::close() !!}
+      </div>
+    </div>
+    <div style="display: none;">{{$i=$i+1}}</div>
 @endforeach
 </div>
 

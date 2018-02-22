@@ -1,10 +1,29 @@
 @extends('MasterLayout1')
 @section('content')
-<div class="container">
+
+<script type="text/javascript">
+window.location = "#loginBody";
+</script>
+
+
+<header class="masthead">
+  <div class="container">
+    <div class="intro-text">
+      <div class="intro-heading"></div>
+    </div>
+  </div>
+</header>
+
+
+
+<section class="bg-light" style="height: 1000px;" id="loginBody">
+    <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Login</div>
+                    <div class="panel-heading">
+                        Login
+                    </div>
                     <div class="panel-body">
                         <div class="Gap3"></div>
                         <form class="form-horizontal" method="POST" action="{{ route('login') }}">
@@ -45,16 +64,20 @@
                                     <button type="submit" class="loginSubmitButton">
                                     Login
                                     </button>
-                                    <div class="forgotPass"><a href="{{ route('password.request') }}">Forgot Your Password?</a></div>
+                                    <div class="forgotPass"><a href="{{ route('password.request') }}" >Forgot Your Password?</a></div>
                                 </div>
                             </div>
                             <div class="registerButton">
-                            <a href="{{ route('register') }}">Register</a>
+                                <a style="cursor: pointer;" href="{{route('register')}}">Register</a>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-</div>
+    </div>
+</section>
+
+
+
 @endsection

@@ -101,4 +101,19 @@ class UserController extends Controller
     {
         //
     }
+
+    public function addToFav(Request $request)
+    {
+        $user_id = $request->user_id;
+        $target_id = $request->target_id;
+        $user = User::find($user_id);
+        $arr = $user->bookmarked_courses;
+        if (($key = array_search($target_id, $arr)) !== false) {
+            unset($arr[$key]);
+        }
+        else $arr = array_prepend($arr ,  $target_id);
+        $user->bookmarked_courses = $arr;
+        $user->save();
+        return response()->json(['success'=>'fav_list updated']);
+    }
 }

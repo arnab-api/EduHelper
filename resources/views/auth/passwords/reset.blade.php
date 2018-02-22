@@ -1,6 +1,19 @@
-@extends('layouts.app')
-
+@extends('MasterLayout1')
 @section('content')
+
+<script type="text/javascript">
+window.location = "#resetBody";
+</script>
+
+<header class="masthead">
+  <div class="container">
+    <div class="intro-text">
+      <div class="intro-heading"></div>
+    </div>
+  </div>
+</header>
+
+<section class="bg-light" id="resetBody">
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -67,4 +80,5 @@
         </div>
     </div>
 </div>
+</section>
 @endsection

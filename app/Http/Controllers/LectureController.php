@@ -71,6 +71,12 @@ class LectureController extends Controller
 
             echo $lecture->content;
 
+            $lecture_arr = Lecture::where('target_course' , $target_course)->orderBy('serial')->get();
+            for($i = 0 ; $i < sizeof($lecture_arr) ; $i++){
+                $lecture_arr[$i]->serial = $i + 1;
+                $lecture_arr[$i]->save();
+            }
+
             return redirect('/updatecourse/'.$target_course);
         }
     }
@@ -84,6 +90,7 @@ class LectureController extends Controller
     public function show($id)
     {
         //
+
     }
 
     /**
@@ -107,6 +114,52 @@ class LectureController extends Controller
     public function update(Request $request, $id)
     {
         //
+        echo "Lecture update called with id".$id."<br>";
+        $serial = "lectNum".$id;
+        $serial = $request->$serial;
+        $title = "lectTitle".$id;
+        $title = $request->$title;
+        $flag = true;
+        try {
+            $serial = (int)$serial;
+        }catch(\Exception $e){
+            echo 'the serial no must be a numeric value';
+            $flag = false;
+        }
+//
+        if($flag) {
+            $lecture = Lecture::find($id);
+            $target_course = $lecture->target_course;
+            $lecture_arr = Lecture::where('target_course' , $target_course)->get();
+            for($i = 0 ; $i < sizeof($lecture_arr) ; $i++){
+                if($lecture_arr[$i]->_id == $id) continue;
+                if($lecture_arr[$i]->serial >= $serial){
+                    $lecture_arr[$i]->serial += 1;
+                    $lecture_arr[$i]->save();
+                }
+            }
+            $content = "ck_editor".$id;
+            $content = $request->$content;
+            $lecture->title = $title;
+            $lecture->serial = $serial;
+            $lecture->content = $content;
+            $lecture->target_course = $target_course;
+            $lecture->save();
+//
+            echo "lecture updated successfully";
+
+            echo $lecture->serial."<br>";
+            echo $lecture->title."<br>";
+            echo $lecture->content;
+
+            $lecture_arr = Lecture::where('target_course' , $target_course)->orderBy('serial')->get();
+            for($i = 0 ; $i < sizeof($lecture_arr) ; $i++){
+                $lecture_arr[$i]->serial = $i + 1;
+                $lecture_arr[$i]->save();
+            }
+
+            return redirect('/updatecourse/'.$target_course);
+        }
     }
 
     /**
