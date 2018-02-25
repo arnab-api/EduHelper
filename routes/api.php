@@ -18,3 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('addToFav', 'UserController@addToFav');
+Route::post('updateRating', 'CourseController@updateRating');
+Route::post('addComment', 'CommentReplyController@addComment');
+Route::post('addReply', 'CommentReplyController@addReply');

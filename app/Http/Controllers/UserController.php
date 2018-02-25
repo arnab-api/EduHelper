@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Auth;
 use Illuminate\Http\Request;
 use App\User;
+use App\Course;
+use App\Lecture;
 
 class UserController extends Controller
 {
@@ -48,7 +50,37 @@ class UserController extends Controller
     {
         //
         $user = User::find($id);
-        return view('UserProfile' , compact('user'));
+        $course_arr = [];
+        if($user->role == 'teacher') {
+//            echo 'HIHIHI';
+            $course_arr = Course::where('uploaded_by' , $id)->get();
+        }
+        else{
+            foreach($user->bookmarked_courses as $course_id){
+                $course = Course::find($course_id);
+                if($course !== null) {
+                    $course_arr = array_prepend($course_arr, $course);
+                }
+            }
+            $course_arr = array_reverse($course_arr);
+        }
+        $lecture_arr = [];
+        $uploader_arr = [];
+        foreach($course_arr as $course){
+            $num_lec = Lecture::where('target_course' , $course->_id)->count();
+            $uploader = User::find($course->uploaded_by);
+
+            $lecture_arr = array_prepend($lecture_arr , $num_lec);
+            $uploader_arr = array_prepend($uploader_arr , $uploader);
+        }
+
+        $lecture_arr = array_reverse($lecture_arr);
+        $uploader_arr = array_reverse($uploader_arr);
+//        echo $user->role."<br>";
+//        echo sizeof($uploader_arr)."<br>";
+//        echo sizeof($lecture_arr)."<br>";
+//        echo sizeof($course_arr)."<br>";
+        return view('UserProfile' , compact('user' , 'course_arr' , 'lecture_arr' , 'uploader_arr'));
     }
 
     /**
@@ -73,6 +105,9 @@ class UserController extends Controller
     {
         //
 //        echo "User update called with id ".$id.'<br>';
+        if(Auth::check() == false) return redirect('/');
+        if(Auth::user()->_id !== $id) return redirect('/');
+        
         $user = User::find($id);
         $user->name = $request->name;
         $user->about_me = $request->aboutMe;

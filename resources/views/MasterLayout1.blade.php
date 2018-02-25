@@ -35,9 +35,11 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav text-uppercase ml-auto">
 
+                        @if(Auth::check() && Auth::user()->role=='teacher')
                         <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+                            <a class="nav-link js-scroll-trigger" href="/course/create">Create Course</a>
                         </li>
+                        @endif
                         
                         @guest
                         <li class="nav-item">
@@ -46,7 +48,7 @@
                         @else
                         <li class="nav-item">
                             <div class="login_div">
-                                <a  href="/user/{{Auth::user()->id}}"><img src="{{asset('img/pro_pic_icon.jpg')}}" class="profilePicRound"></a>
+                                <a  href="/user/{{Auth::user()->id}}"><img src="{{asset('').Auth::user()->profilePic}}" class="profilePicRound"></a>
                                 <a  href="/user/{{Auth::user()->id}}">{{ Auth::user()->name }}</a>
                                 <a title="logout" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img src="{{asset('img/logout_icon.png')}}" class="logoutText"></a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -68,53 +70,11 @@
 
 
 
-        <section id="contact">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <h2 class="section-heading text-uppercase">Contact Us</h2>
-                        <h3 class="section-subheading text-muted"></h3>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <form id="contactForm" name="sentMessage" novalidate>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input class="form-control" id="contact_name" type="text" placeholder="Your Name *" required data-validation-required-message="Please enter your name.">
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" id="contact_email" type="email" placeholder="Your Email *" required data-validation-required-message="Please enter your email address.">
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" id="contact_phone" type="tel" placeholder="Your Phone *" required data-validation-required-message="Please enter your phone number.">
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <textarea class="form-control" id="contact_message" placeholder="Your Message *" required data-validation-required-message="Please enter a message."></textarea>
-                                        <p class="help-block text-danger"></p>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="col-lg-12 text-center">
-                                    <div id="success"></div>
-                                    <button id="sendMessageButton" class="btn btn-primary btn-xl text-uppercase" type="submit">Send Message</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
+        
 
 
 
-
+        <hr>
         <!-- Footer -->
         <footer>
             <div class="container">
@@ -201,7 +161,9 @@
         }
 
         function closeEditLectureDiv(id) {
-            $("#editLectDiv" + id).slideToggle();
+            if(id==-1)  $("#ckeditorDiv").slideToggle();
+            if(id==-2)  $("#addQuizDiv").slideToggle();
+            else $("#editLectDiv" + id).slideToggle();
         }
 
 
@@ -219,23 +181,46 @@
             $("#LectNo" + id).css("background-color", "#ececec");
         }
 
-        CKEDITOR.replace('ck_editor', {
-                customConfig: 'config.js',
-                toolbar: 'simple'
+
+        $('#addQuizButton').click(function(e) {
+            $("#addQuizDiv").delay(100).fadeIn(100);
+            e.preventDefault();
+        });
+
+        function deleteItem(tp, id) {
+            if(tp=='course') 
+                $("#courseDelConf").delay(100).fadeIn(100);
+            else if(tp=='lect') 
+                $("#lectDelConf" + id).delay(100).fadeIn(100);
+
+            else if(tp=='quiz') 
+                $("#quizDelConf").delay(100).fadeIn(100);
+            else if(tp=='ques') 
+                $("#quesDelConf" + id).delay(100).fadeIn(100);
+        }
+
+         function noClicked(tp, id) {
+            if(tp=='course') 
+                $("#courseDelConf").fadeOut(100);
+            else if(tp=='lect') 
+                $("#lectDelConf" + id).fadeOut(100);
+            else if(tp=='quiz') 
+                $("#quizDelConf").fadeOut(100);
+            else if(tp=='ques') 
+                $("#quesDelConf" + id).fadeOut(100);
+        }
+
+
+
+        CKEDITOR.replaceAll( 'ckeditorclass' ,function( textarea, config )
+            {
             });
 
-        for(i=0; i<1500; i++)
-        {
-            console.log('ck_editor'+i);
-            CKEDITOR.replace('ck_editor'+i, {
-                customConfig: 'config.js',
-                toolbar: 'simple'
-            });
-        }
 
         </script>
 
 
 
     </body>
+</html>
 </html>

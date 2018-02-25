@@ -26,16 +26,7 @@
       </div>
     </div>
     
-    <div class="profileListDiv">
-      <div class="Gap2"></div>
-      <div class="profileListTitle">
-        <img src="{{asset('img/contribIcon.png')}}">
-        &nbsp Contrib.
-      </div>
-      <div class="profileListDescr">
-        {{$user->point}}
-      </div>
-    </div>
+  
     
     <div class="profileListDiv">
       <div class="Gap2"></div>
@@ -51,7 +42,7 @@
       <div class="Gap2"></div>
       <div class="profileListTitle">
         <img src="{{asset('img/aboutMeIcon.png')}}">
-        &nbsp About Me
+        &nbsp Designation
       </div>
       <div class="aboutMeDescr">
         {{$user->about_me}}
@@ -60,15 +51,27 @@
     
     <div class="Gap2"></div>
 
-    @if(Auth::check() == true)
+    @if(Auth::check() == true && Auth::user()->_id==$user->_id)
       <div class="profileListDiv">
-        <a title="Login Required" class="profileUpdateButton" id="profileUpdateButton">Update</a>
+        <a class="profileUpdateButton btn btn-success" id="profileUpdateButton">Update</a>
       </div>
-
     @endif
 
-    <a href="#portfolio"><div class="favCourseButton">Favourite Courses</div></a>
-    <div class="userLevel">Instructor</div>
+    <a href="#portfolio"><div class="favCourseButton">
+      @if($user->role=='teacher')
+        Courses Teaching
+      @else
+        Favourite Courses
+      @endif
+    </div></a>
+    
+    <div class="userLevel">
+    @if($user->role=='teacher')
+      Instructor
+    @else
+      Student
+    @endif
+    </div>
    
   </div>
 </div>
@@ -91,7 +94,7 @@
     <input id="name" type="text" class="songUploadDiv" name="name" value="{{$user->name}}">
     <div class="Gap3"></div>
   </div>
-  <label class="col-md-4 control-label">About Me</label>
+  <label class="col-md-4 control-label">Designation</label>
   <div class="col-md-6">
     <textarea id="aboutMe" class="songUploadDiv" name="aboutMe">{{$user->about_me}}</textarea>
     <div class="Gap3"></div>
@@ -122,30 +125,41 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h2 class="section-heading">Favourite Courses</h2>
+        <h2 class="section-heading">
+            @if($user->role=='teacher')
+            Courses Teaching
+            @else
+            Favourite Courses
+            @endif
+        </h2>
         <h3 class="section-subheading text-muted"></h3>
       </div>
     </div>
     <div class="row">
-      @for($j=0; $j<6; $j++)
+      @for($j=0; $j<sizeof($course_arr); $j++)
       <div class="col-md-4">
         <div class="card user-card">
           
           <div class="card-block">
-            
-            <h6 class="f-w-600 m-t-25 m-b-10">HTML</h6>
-            <p class="text-muted">Istructor : ABCD</p>
+          @if(Auth::check() == true && Auth::user()->_id==$uploader_arr[$j]->_id)
+            <a class="editIcon2" href="/updatecourse/{{$course_arr[$j]->id}}" ><i class="fa fa-edit" style="color: black;"></i></a>
+          @endif
+            <h6 class="f-w-600 m-t-25 m-b-10">{{$course_arr[$j]->title}}</h6>
+            <p class="text-muted">Istructor : <a href="/user/{{$uploader_arr[$j]->_id}}" style="color: darkblue;">{{$uploader_arr[$j]->name}}</a></p>
             <hr>
-            @for($i=0; $i<3; $i++)
+             @for($i=0; $i<round($course_arr[$j]->rating); $i++)
             <img src="{{asset('img/starIcon.png')}}" class="shownStar">
             @endfor
+             @for($i=round($course_arr[$j]->rating)+1; $i<6; $i++)
+            <img src="{{asset('img/star_empty.png')}}" class="shownStar">
+            @endfor
             
-            <p class="m-t-15 lecturesText">5 Lectures</p>
+            <p class="m-t-15 lecturesText">{{$lecture_arr[$j]}} Lectures</p>
             <hr>
             <div class="row justify-content-center user-social-link">
               
               <div class="circle-tile ">
-                <a href="#"><div class="circle-tile-heading green"><i class="fa fa-arrow-right fa-fw fa-3x"></i></div></a>
+                <a href="/course/{{$course_arr[$j]->_id}}"><div class="circle-tile-heading green"><i class="fa fa-arrow-right fa-fw fa-3x"></i></div></a>
                 <div class="Gap3"></div>
               </div>
             </div>

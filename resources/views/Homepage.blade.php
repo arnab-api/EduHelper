@@ -35,17 +35,16 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav text-uppercase ml-auto">
 
+        @if(Auth::check() && Auth::user()->role=='teacher')
         <li class="nav-item">
           <a class="nav-link js-scroll-trigger" href="course/create">Create Course</a>
         </li>
+        @endif
         <li class="nav-item">
           <a class="nav-link js-scroll-trigger" href="#portfolio">Courses</a>
         </li>
         <li class="nav-item">
           <a class="nav-link js-scroll-trigger" href="#team">Instructors</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
         </li>
 
         @guest
@@ -57,7 +56,7 @@
             <div class="login_div">
 
 
-              <a  href="/user/{{Auth::user()->id}}"><img src="{{asset('img/pro_pic_icon.jpg')}}" class="profilePicRound"></a>
+              <a  href="/user/{{Auth::user()->id}}"><img src="{{asset('').Auth::user()->profilePic}}" class="profilePicRound"></a>
               <a  href="/user/{{Auth::user()->id}}">{{ Auth::user()->name }}</a>
               <a title="logout" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img src="{{asset('img/logout_icon.png')}}" class="logoutText"></a>
               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -90,10 +89,10 @@
       <div class="snippetContainer">
         <div class="col-lg-2 col-sm-6">
           <div class="circle-tile ">
-            <a href="#"><div class="circle-tile-heading green"><i class="fa fa-book fa-fw fa-3x"></i></div></a>
+            <a href="/allcourses"><div class="circle-tile-heading green"><i class="fa fa-book fa-fw fa-3x"></i></div></a>
             <div class="circle-tile-content green">
               <div class="circle-tile-description text-faded">Courses</div>
-              <div class="circle-tile-number text-faded ">265</div>
+              <div class="circle-tile-number text-faded ">{{$num_course}}</div>
               <a class="circle-tile-footer" href="#"></a>
             </div>
           </div>
@@ -101,20 +100,20 @@
 
         <div class="col-lg-2 col-sm-6">
           <div class="circle-tile ">
-            <a href="#"><div class="circle-tile-heading dark-blue"><i class="fa fa-users fa-fw fa-3x"></i></div></a>
+            <a><div class="circle-tile-heading dark-blue"><i class="fa fa-users fa-fw fa-3x"></i></div></a>
             <div class="circle-tile-content dark-blue">
-              <div class="circle-tile-description text-faded"> Users</div>
-              <div class="circle-tile-number text-faded ">10</div>
+              <div class="circle-tile-description text-faded"> Students</div>
+              <div class="circle-tile-number text-faded ">{{$num_student}}</div>
               <a class="circle-tile-footer" href="#"></a>
             </div>
           </div>
         </div>
         <div class="col-lg-2 col-sm-6">
           <div class="circle-tile ">
-            <a href="#"><div class="circle-tile-heading yellow"><i class="fa fa-male fa-fw fa-3x"></i></div></a>
+            <a href="#team"><div class="circle-tile-heading yellow"><i class="fa fa-male fa-fw fa-3x"></i></div></a>
             <div class="circle-tile-content yellow">
               <div class="circle-tile-description text-faded"> Instructors</div>
-              <div class="circle-tile-number text-faded ">10</div>
+              <div class="circle-tile-number text-faded ">{{$num_teacher}}</div>
               <a class="circle-tile-footer" href="#"></a>
             </div>
           </div>
@@ -129,42 +128,56 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h2 class="section-heading text-uppercase">Popular Courses</h2>
+        <h2 class="section-heading text-uppercase">Recent Courses</h2>
         <h3 class="section-subheading text-muted"></h3>
       </div>
     </div>
     <div class="row">
-      @for($j=0; $j<6; $j++)
-        <div class="col-md-4">
-          <div class="card user-card">
+      @for($j=0; $j<sizeof($course_arr); $j++)
+      <div class="col-md-4">
 
-            <div class="card-block">
+        <div class="card user-card">
+          
+          <div class="card-block">
+            
 
-              <h6 class="f-w-600 m-t-25 m-b-10">HTML</h6>
-              <p class="text-muted">Istructor : ABCD</p>
-              <hr>
-              @for($i=0; $i<3; $i++)
-                <img src="{{asset('img/starIcon.png')}}" class="shownStar">
-              @endfor
+            @if(Auth::check() == true && Auth::user()->_id==$uploader_arr[$j]->_id)
+            <a class="editIcon2" href="/updatecourse/{{$course_arr[$j]->id}}" ><i class="fa fa-edit" style="color: black;"></i></a>
+            @endif
+            <h6 class="f-w-600 m-t-25 m-b-10">{{$course_arr[$j]->title}}</h6>
+            <p class="text-muted">Istructor : <a style="color: darkblue;" href="/user/{{$uploader_arr[$j]->id}}">{{$uploader_arr[$j]->name}}</a></p>
+            <hr>
+            @for($i=0; $i<round($course_arr[$j]->rating); $i++)
+            <img src="{{asset('img/starIcon.png')}}" class="shownStar">
+            @endfor
+             @for($i=round($course_arr[$j]->rating)+1; $i<6; $i++)
+            <img src="{{asset('img/star_empty.png')}}" class="shownStar">
+            @endfor
+            <p class="m-t-15 lecturesText">{{$lecture_arr[$j]}} Lectures</p>
+            <hr>
 
-              <p class="m-t-15 lecturesText">5 Lectures</p>
-              <hr>
-              <div class="row justify-content-center user-social-link">
 
-                <div class="circle-tile ">
-                  <a href="#"><div class="circle-tile-heading green"><i class="fa fa-arrow-right fa-fw fa-3x"></i></div></a>
-                  <div class="Gap3"></div>
-                </div>
+            <div class="row justify-content-center user-social-link">
+              <div class="circle-tile ">
+                <a href="/course/{{$course_arr[$j]->_id}}">
+                  <div class="circle-tile-heading green"><i class="fa fa-arrow-right fa-fw fa-3x"></i></div>
+                </a>
+                <div class="Gap3"></div>
               </div>
             </div>
+
+
           </div>
+
         </div>
+
+      </div>
       @endfor
-      <button class="loginSubmitButton" style="margin-left: 46%;" type="submit">See All</button>
-    </div>
+      </div>
+      <a class="btn btn-success" href="/allcourses" style="margin-left: 46%;" type="submit">See All</a>
+   
   </div>
 </section>
-
 
 <section class="bg-light" id="team">
   <div class="container">
@@ -175,79 +188,18 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-4">
+    @for($i = 0 ; $i < sizeof($teacher_arr) ; $i++)
+
+      <div class="col-sm-4" style="margin-left: auto; margin-right: auto;">
         <div class="team-member">
-          <img class="mx-auto rounded-circle" src="img/team/1.jpg" alt="">
-          <h4>Kay Garland</h4>
-          <p class="text-muted">Lead Designer</p>
-          <ul class="list-inline social-buttons">
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-twitter"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-facebook"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-linkedin"></i>
-              </a>
-            </li>
-          </ul>
+          <img class="mx-auto rounded-circle" src="{{asset('').$teacher_arr[$i]->profilePic}}" alt="">
+          <h4><a style="color: darkblue;" href="/user/{{$teacher_arr[$i]->id}}">{{$teacher_arr[$i]->name}}</a></h4>
+          <p class="text-muted">{{$teacher_arr[$i]->about_me}}</p>
         </div>
       </div>
-      <div class="col-sm-4">
-        <div class="team-member">
-          <img class="mx-auto rounded-circle" src="img/team/2.jpg" alt="">
-          <h4>Larry Parker</h4>
-          <p class="text-muted">Lead Marketer</p>
-          <ul class="list-inline social-buttons">
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-twitter"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-facebook"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-linkedin"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="team-member">
-          <img class="mx-auto rounded-circle" src="img/team/3.jpg" alt="">
-          <h4>Diana Pertersen</h4>
-          <p class="text-muted">Lead Developer</p>
-          <ul class="list-inline social-buttons">
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-twitter"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-facebook"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fa fa-linkedin"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      @endfor
     </div>
+
     <div class="row">
       <div class="col-lg-8 mx-auto text-center">
       </div>
@@ -256,52 +208,8 @@
 </section>
 
 
-<section id="contact">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h2 class="section-heading text-uppercase">Contact Us</h2>
-        <h3 class="section-subheading text-muted"></h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <form id="contactForm" name="sentMessage" novalidate>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <input class="form-control" id="contact_name" type="text" placeholder="Your Name *" required data-validation-required-message="Please enter your name.">
-                <p class="help-block text-danger"></p>
-              </div>
-              <div class="form-group">
-                <input class="form-control" id="contact_email" type="email" placeholder="Your Email *" required data-validation-required-message="Please enter your email address.">
-                <p class="help-block text-danger"></p>
-              </div>
-              <div class="form-group">
-                <input class="form-control" id="contact_phone" type="tel" placeholder="Your Phone *" required data-validation-required-message="Please enter your phone number.">
-                <p class="help-block text-danger"></p>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <textarea class="form-control" id="contact_message" placeholder="Your Message *" required data-validation-required-message="Please enter a message."></textarea>
-                <p class="help-block text-danger"></p>
-              </div>
-            </div>
-            <div class="clearfix"></div>
-            <div class="col-lg-12 text-center">
-              <div id="success"></div>
-              <button id="sendMessageButton" class="btn btn-primary btn-xl text-uppercase" type="submit">Send Message</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
 
-
-
+<hr>
 <footer>
   <div class="container">
     <div class="row">

@@ -22,7 +22,6 @@ window.location = "#registerBody";
         <div class="panel panel-default">
           <div class="panel-heading">
             Register
-            <a id="registercancel" style="cursor: pointer; float: right;"><i class="fa fa-times"></i></a>
           </div>
           <div class="panel-body">
             <form class="form-horizontal" method="POST" action="{{ route('register') }}">
@@ -64,15 +63,6 @@ window.location = "#registerBody";
                 <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
                 <div class="col-md-6">
                   <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-md-6 col-md-offset-4">
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" name="instructor"> As Instructor
-                    </label>
-                  </div>
                 </div>
               </div>
               <div class="form-group">

@@ -65,11 +65,12 @@ class LectureController extends Controller
             $lecture->serial = $serial;
             $lecture->content = $content;
             $lecture->target_course = $target_course;
+            $lecture->type = 'lecture';
             $lecture->save();
 
-            echo "lecture uploaded successfully";
-
-            echo $lecture->content;
+//            echo "lecture uploaded successfully";
+//
+//            echo $lecture->content;
 
             $lecture_arr = Lecture::where('target_course' , $target_course)->orderBy('serial')->get();
             for($i = 0 ; $i < sizeof($lecture_arr) ; $i++){
@@ -114,7 +115,7 @@ class LectureController extends Controller
     public function update(Request $request, $id)
     {
         //
-        echo "Lecture update called with id".$id."<br>";
+//        echo "Lecture update called with id".$id."<br>";
         $serial = "lectNum".$id;
         $serial = $request->$serial;
         $title = "lectTitle".$id;
@@ -146,11 +147,11 @@ class LectureController extends Controller
             $lecture->target_course = $target_course;
             $lecture->save();
 //
-            echo "lecture updated successfully";
-
-            echo $lecture->serial."<br>";
-            echo $lecture->title."<br>";
-            echo $lecture->content;
+//            echo "lecture updated successfully";
+//
+//            echo $lecture->serial."<br>";
+//            echo $lecture->title."<br>";
+//            echo $lecture->content;
 
             $lecture_arr = Lecture::where('target_course' , $target_course)->orderBy('serial')->get();
             for($i = 0 ; $i < sizeof($lecture_arr) ; $i++){
@@ -171,5 +172,14 @@ class LectureController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function deleteLecture($id){
+        if(Auth::check() == false) return redirect('/');
+        $lecture = Lecture::find($id);
+        if($lecture == null) return redirect('/');
+        $target_course = $lecture->target_course;
+        $lecture->delete();
+        return redirect('/updatecourse/'.$target_course);
     }
 }

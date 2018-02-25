@@ -72,7 +72,6 @@ class RegisterController extends Controller
             $user->uploaded_courses = [];
         }
         $user->bookmarked_courses = [];
-        $user->rating_arr = [];
         $user->points = 0.0;
         $user->about_me = "not added yet";
         $user->profilePic = "img/pro_pic_icon.jpg";

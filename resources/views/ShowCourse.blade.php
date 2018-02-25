@@ -9,6 +9,11 @@
   </div>
 </header>
 
+<style type="text/css">
+    a{
+        color: blue;
+    }
+</style>
 
 <div class="Gap10"></div>
 
@@ -21,8 +26,8 @@
       <div class="circle-tile">
 
         <div class="team-member">
-          <img style="height: 100%; width: 100%; margin-top: -10px;" class="mx-auto rounded-circle" src="{{asset('').$uploader->profilePic}}" alt="">
-          <a href=""  style="color: black; background-color: white; padding: 5px;">{{$uploader->name}}</a>
+          <img style="height: 115px; width: 115px; margin-top: -10px;" class="mx-auto rounded-circle" src="{{asset('').$uploader->profilePic}}" alt="">
+          <a href="/user/{{$uploader->_id}}"  style="color: black; background-color: white; padding: 5px;">{{$uploader->name}}</a>
         </div>
 
 
@@ -36,19 +41,26 @@
           @if($i > 0)
             ,&nbsp
           @endif
-          {{$tag_arr[$i]->name}}
+          <a style="color: #ecdf0f;" href='/searchByTag/{{$tag_arr[$i]->_id}}'> {{$tag_arr[$i]->name}}</a>
         @endfor
       </h3>
       <div class="Gap2"></div>
-      @for($i=0; $i<$course->rating; $i++)
-      <img src="{{asset('img/starIcon.png')}}" class="shownStar">
-      @endfor
+        <div id="courseRating">
+              @for($i=0; $i<round($course->rating); $i++)
+              <img src="{{asset('img/starIcon.png')}}" class="shownStar">
+              @endfor
+
+              @for($i=round($course->rating)+1; $i<6; $i++)
+              <img src="{{asset('img/star_empty.png')}}" class="shownStar">
+              @endfor
+        </div>
     </div>
   </div>
 </div>
 
 <div class="container">
 
+    @if(Auth::check())
  <div class="rateDiv">
         <div class="ratingStars">
             <form id="ratingsForm">
@@ -68,6 +80,7 @@
             </form>
         </div>
     </div>
+    @endif
 
 
     @if(Auth::check())
@@ -87,12 +100,21 @@
 
 <div class="Gap3"></div>
 
+
 <div class='container'>
   <div id='content' class='row'>
     <div class='span2 sidebar'>
       <ul class="nav nav-tabs nav-stacked">
         @for($i=0; $i<sizeof($lecture_arr); $i++)
+        @if($i==0)
+        <li><a style="color: #33719e; background-color: #ececec; font-weight: 400; cursor: pointer"  id="{{"LectNo".$i}}" onclick="changeMainDivContent({{$i}}, '{{sizeof($lecture_arr)}}');">Lecture {{$i+1}}</a></li>
+        @else
+        @if($lecture_arr[$i]->type!='quiz')
         <li><a style="color: #33719e; font-weight: 400; cursor: pointer"  id="{{"LectNo".$i}}" onclick="changeMainDivContent({{$i}}, '{{sizeof($lecture_arr)}}');">Lecture {{$i+1}}</a></li>
+        @else
+        <li><a style="color: #33719e; font-weight: 400; cursor: pointer"  id="{{"LectNo".$i}}" href="/quiz/{{$lecture_arr[$i]->_id}}">Quiz</a></li>
+        @endif
+        @endif
         @endfor
       </ul>
     </div>
@@ -115,214 +137,328 @@
 @endif
 
 
-
 <div class='span8 main container'>
+
+<h1 style="font-size: 25px; margin-top: -20px; margin-bottom: 15px; background-color: #ececec; padding: 7px;">{{$lecture_arr[$k]->title}}</h1>
+
+
+
+
+<!-- if Lecture is Quiz-->
+
+
+
+
+<!--End Quiz-->
+
+
+
+
 
 <!-- Output from CKeditor -->
 
+@if($lecture_arr[$k]->type!='quiz')
   {!! $lecture_arr[$k]->content !!}
+@endif
 <!-- End of output -->
 
 </div>
+    <div class="container">
+        <div class="commentSection">
+            <div class="row">
+                <div class="comments-container">
 
 
+                    <h1>Comments </h1>
+                    <hr>
 
 
+                    <ul id="comments-list" class="comments-list">
+
+                        <!-- Comment Box-->   <!--Form Needed-->
+                        @if(Auth::check())
+                            <li>
+                                <div class="comment-main-level">
+                                    <div class="comment-avatar"><img src="{{asset('').Auth::user()->profilePic}}" alt=""></div>
+                                    <div class="comment-box">
+                                        <div class="comment-head">
+                                            @if(Auth::user()->role=='teacher')
+                                            <h6 class="comment-name by-author"><a href="/user/{{Auth::user()->_id}}">{{Auth::user()->name}}</a></h6>
+                                            @else
+                                            <h6 class="comment-name by-student"><a href="/user/{{Auth::user()->_id}}">{{Auth::user()->name}}</a></h6>
+                                            @endif
+                                            <span>Now</span>
+                                        </div>
+                                        <input style="width: 100%;margin-bottom: 5px; border:none;" onkeydown="CommentFunc(event, '{{$lecture_arr[$k]->_id}}');" type="text" placeholder="Join the conversation" class="comment-content" id="{{"comArea".$lecture_arr[$k]->_id}}">
+                                    </div>
+                                </div>
+                            </li>
+                        @endif
+                    <!-- End Comment Box -->
+                        <div class="comments" id="{{"allcomments".$lecture_arr[$k]->_id}}">
+                            @include('commentManager');
+                        </div>
+                    </ul>
 
 
-
-
-
-
-
-
-<div class="container">
-  <div class="commentSection">
-    <div class="row">
-      <div class="comments-container">
-
-
-        <h1>Comments (152)</h1>
-        <hr>
-
-
-        <ul id="comments-list" class="comments-list">
-
-          <!-- Comment Box-->   <!--Form Needed-->
-          <li>
-            <div class="comment-main-level">
-              <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
-              <div class="comment-box">
-                <div class="comment-head">
-                  <h6 class="comment-name"><a href="">Mridul</a></h6>
-                  <span>Now</span>
                 </div>
-                <input style="width: 100%;margin-bottom: 5px; border:none;" type="text" placeholder="Join the conversation" class="comment-content">
-              </div>
             </div>
-          </li>
-          <!-- End Comment Box -->
-
-          <!-- 3 is the number of comments in this lecture -->
-          @for($i=0; $i<3; $i++)
-
-          <li>
-            <div class="comment-main-level">
-              <div class="comment-avatar"><img src="{{asset('img/pro_pic_icon.jpg')}}" alt=""></div>
-              <div class="comment-box">
-                <div class="comment-head">
-                  <h6 class="comment-name by-author"><a href="">Arnab Sen Sharma</a></h6>
-                  <span>2 days ago</span>
-                  <i class="fa fa-reply" id="{{"replyButton".$cnt}}" onclick="openReplyBox({{$cnt}});"></i>
-                </div>
-                <div class="comment-content">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
-                </div>
-              </div>
-            </div>
-
-
-
-            <!--Reply Box-->      <!--Form Needed-->
-            <ul class="comments-list reply-list" id="{{"replyBox".$cnt}}" style="display: none">
-                <li>
-                  <div class="comment-avatar"><img src="{{asset('img/pro_pic_icon.jpg')}}" alt=""></div>
-                  <div class="comment-box">
-                    <div class="comment-head">
-                      <h6 class="comment-name"><a href="">Lorena Rojero</a></h6>
-                      <span>Now</span>
-                    </div>
-
-                      <input style="width: 100%;margin-bottom: 5px; border:none;" type="text" placeholder="Make a reply" class="comment-content">
-
-                  </div>
-                </li>
-              </ul>
-
-              <!-- End Reply Box -->
-
-            <!-- 2 is the number of replies in this comment -->
-            @for($j=0; $j<2; $j++)
-
-            <ul class="comments-list reply-list">
-              <li>
-                <div class="comment-avatar"><img src="{{asset('img/pro_pic_icon.jpg')}}" alt=""></div>
-                <div class="comment-box">
-                  <div class="comment-head">
-                    <h6 class="comment-name"><a href="">Mridul</a></h6>
-                    <span>1 hour ago</span>
-                    <i class="fa fa-reply" id="{{"replyButton".$cnt}}" onclick="openReplyBox({{$cnt}});"></i>
-                  </div>
-                  <div class="comment-content">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
-                  </div>
-                </div>
-              </li>
-              </ul>
-            @endfor
-
-
-            </li>
-
-            <div style="display: none;">{{$cnt=$cnt+1}}</div>
-
-            @endfor
-
-            </ul>
-
-
-          </div>
         </div>
-      </div>
     </div>
-
-
-
 </div>
 @endfor
 
 <div class="Gap10"></div>
 
-        <script type="text/javascript">
+<script type="text/javascript">
+
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+function CommentFunc(e, id) {
+    var charCode;
+
+    if (e && e.which) {
+        charCode = e.which;
+    } else if (window.event) {
+        e = window.event;
+        charCode = e.keyCode;
+    }
+
+    if (charCode == 13) {
+        console.log("Hit");
+        e.preventDefault();
+        var user_id = -1;
+        @if(Auth::check()) {
+            user_id = "{{ Auth::user()->id }}";
+        }
+        @endif
+        var target_id = id;
+        console.log(target_id);
+        var content = $('#comArea' + target_id).val();
+        var data = {
+            comment: content,
+            user_id: user_id,
+            target_id: target_id
+        };
+        var pre = {!!json_encode(url('/')) !!};
+        var url = pre + '/api/addComment';
+        console.log(url, data);
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            success: function(data) {
+                console.log("SSuccess");
+                $('#allcomments' + target_id).prepend(data);
+                $('#comArea' + target_id).val("");
+            },
+            error: function(data) {
+                console.log('EError:', data);
+            }
+        });
+    }
+}
+
+function ReplyFunc(e, id) {
+    var charCode;
+
+    if (e && e.which) {
+        charCode = e.which;
+    } else if (window.event) {
+        e = window.event;
+        charCode = e.keyCode;
+    }
+
+    if (charCode == 13) {
+        console.log("Hit reply");
+        e.preventDefault();
+        var user_id = -1;
+        @if(Auth::check()) {
+            user_id = "{{ Auth::user()->id }}";
+        }
+        @endif
+        var target_id = id;
+        var content = $('#replyArea' + target_id).val();
+        var data = {
+            reply: content,
+            user_id: user_id,
+            target_id: target_id
+        };
+        var pre = {!!json_encode(url('/'))!!};
+        var url = pre + '/api/addReply';
+        console.log(url, data);
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            success: function(data) {
+                console.log("SSuccess");
+                $('#reply_for_' + target_id).prepend(data);
+                $('#replyArea' + target_id).val("");
+            },
+            error: function(data) {
+                console.log('EError:', data);
+            }
+        });
+
+        openReplyBox(id);
+    }
+}
 
 
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+$(".addToFavDiv").on('click', function(e) {
+    console.log("Hit Fav Icon");
+    e.preventDefault();
+    var user_id = -1;
+    @if(Auth::check()) {
+        user_id = "{{ Auth::user()->id }}";
+    }
+    @endif
+    var target_id = {!!json_encode($id) !!};
+    var data = {
+        user_id: user_id,
+        target_id: target_id
+    };
+    var pre = {!!json_encode(url('/')) !!};
+    var url = pre + '/api/addToFav';
+    console.log(url, data);
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
+        success: function(data) {
+            console.log("Success", data);
+        },
+        error: function(data) {
+            console.log('Error:', data);
+        }
+    });
+});
 
-            $(".addToFavDiv").on('click' , function(e){
-                console.log("Hit Fav Icon");
-                e.preventDefault();
-                var user_id = -1;
-                    @if (Auth::check())
-                {
-                    user_id = "{{ Auth::user()->id }}";
-                }
-                        @endif
-                var target_id = {!! json_encode($id) !!};
-                var data = {user_id:user_id, target_id:target_id};
-                var pre = {!! json_encode(url('/')) !!};
-                var url = pre+'/api/addToFav';
-                console.log(url , data);
-                $.ajax({
-                    type:'POST',
-                    url:url,
-                    data:data,
-                    success:function(data){
-                        console.log("Success" , data);
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
+@if($fav == 1)
 
-            @if($fav == 1)
+$('.fav_click').addClass('fav_active');
+$('.fav_click').addClass('fav_active-2');
+setTimeout(function() {
+    $('.fav_click fav_span').addClass('fa-heart');
+    $('.fav_click fav_span').removeClass('fa-heart-o')
+}, 150);
+setTimeout(function() {
+    $('.fav_click').addClass('fav_active-3')
+}, 150);
 
-                $('.fav_click').addClass('fav_active');
-            $('.fav_click').addClass('fav_active-2');
-            setTimeout(function() {
-                $('.fav_click fav_span').addClass('fa-heart');
-                $('.fav_click fav_span').removeClass('fa-heart-o')
-            }, 150);
-            setTimeout(function() {
-                $('.fav_click').addClass('fav_active-3')
-            }, 150);
+@endif
 
-            @endif
+$('.fav_click').click(function() {
+    if ($('fav_span').hasClass("fa-heart")) {
+        $('.fav_click').removeClass('fav_active');
+        setTimeout(function() {
+            $('.fav_click').removeClass('fav_active-2')
+        }, 30);
+        $('.fav_click').removeClass('fav_active-3');
+        setTimeout(function() {
+            $('fav_span').removeClass('fa-heart');
+            $('fav_span').addClass('fa-heart-o')
+        }, 15)
+    } else {
+        $('.fav_click').addClass('fav_active');
+        $('.fav_click').addClass('fav_active-2');
+        setTimeout(function() {
+            $('fav_span').addClass('fa-heart');
+            $('fav_span').removeClass('fa-heart-o')
+        }, 150);
+        setTimeout(function() {
+            $('.fav_click').addClass('fav_active-3')
+        }, 150);
+        $('.fav_info').addClass('fav_info-tog');
+        setTimeout(function() {
+            $('.fav_info').removeClass('fav_info-tog')
+        }, 1000)
+    }
+});
 
-                $('.fav_click').click(function() {
-                if ($('fav_span').hasClass("fa-heart")) {
-                    $('.fav_click').removeClass('fav_active');
-                    setTimeout(function() {
-                        $('.fav_click').removeClass('fav_active-2')
-                    }, 30);
-                    $('.fav_click').removeClass('fav_active-3');
-                    setTimeout(function() {
-                        $('fav_span').removeClass('fa-heart');
-                        $('fav_span').addClass('fa-heart-o')
-                    }, 15)
-                } else {
-                    $('.fav_click').addClass('fav_active');
-                    $('.fav_click').addClass('fav_active-2');
-                    setTimeout(function() {
-                        $('fav_span').addClass('fa-heart');
-                        $('fav_span').removeClass('fa-heart-o')
-                    }, 150);
-                    setTimeout(function() {
-                        $('.fav_click').addClass('fav_active-3')
-                    }, 150);
-                    $('.fav_info').addClass('fav_info-tog');
-                    setTimeout(function() {
-                        $('.fav_info').removeClass('fav_info-tog')
-                    }, 1000)
-                }
-            });
+function updateRating(val) {
+    console.log("Hit star ", val);
+    var user_id = -1;
+    @if(Auth::check()) {
+        user_id = "{{ Auth::user()->id }}";
+    }
+    @endif
+    var target_id = {!!json_encode($id) !!};
+    var data = {
+        user_id: user_id,
+        target_id: target_id,
+        given_rating: val
+    };
+    var pre = {!!json_encode(url('/')) !!};
+    var url = pre + '/api/updateRating';
+    console.log("oka",  url, data);
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
 
+        success: function(data) {
+            console.log("Success", data);
+            rate = Math.round(data.new_rating);
+            var add = '<div id="courseRating">';
 
-        </script>
+            for (i = 0; i < rate; i++) {
+                add += "<img src=\"{{asset('img/starIcon.png')}}\" class=\"shownStar\">";
+            }
+
+            $('#courseRating').replaceWith(add);
+            $("#star-1").prop("checked", false);
+            $("#star-2").prop("checked", false);
+            $("#star-3").prop("checked", false);
+            $("#star-4").prop("checked", false);
+            $("#star-5").prop("checked", false);
+            $("#star-" + val).prop("checked", true);
+        },
+        error: function(data) {
+            console.log('Error:', data);
+        }
+    });
+}
+
+var rate = {!!json_encode($rating) !!};
+rate = Math.round(rate);
+
+console.log(rate);
+
+$("#star-" + rate).prop("checked", true);
+
+$("input[name='star_1']").on('click', function(e) {
+    e.preventDefault();
+    updateRating(1);
+});
+
+$("input[name='star_2']").on('click', function(e) {
+    e.preventDefault();
+    updateRating(2);
+});
+
+$("input[name='star_3']").on('click', function(e) {
+    e.preventDefault();
+    updateRating(3);
+});
+
+$("input[name='star_4']").on('click', function(e) {
+    e.preventDefault();
+    updateRating(4);
+});
+
+$("input[name='star_5']").on('click', function(e) {
+    e.preventDefault();
+    updateRating(5);
+});
+
+</script>
+
 
 @endsection
